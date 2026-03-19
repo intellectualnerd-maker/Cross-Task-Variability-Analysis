@@ -1,0 +1,8 @@
+Feature Engineering Report (DARWIN Dataset)
+============================================================
+subjects:174
+original features:451(excluding label)
+base features:18
+engineered features per base: 5 (mean, std, cv, range, iqr)
+Final feature count:90(excluding label)
+output file: D:/project-root/Cross-task validation/results\engineered_features.csv

@@ -1,0 +1,94 @@
+Feature Selection Report
+============================================================
+
+Timestamp: 2025-10-20 03:44:59
+
+1. Dataset Overview
+   - Samples: 174
+   - Initial features: 90
+
+2. Correlation Filtering
+   - Threshold used: 0.9 (adaptive to 0.95 if needed)
+   - Features removed due to correlation: 28
+   - Remaining features after filtering: 62
+
+3. Random Forest Feature Importance (Top 25)
+   1. air_time_iqr — importance: 0.12548
+   2. total_time_iqr — importance: 0.10254
+   3. paper_time_mean — importance: 0.06912
+   4. air_time_mean — importance: 0.05263
+   5. disp_index_mean — importance: 0.04520
+   6. pressure_mean_mean — importance: 0.03952
+   7. pressure_mean_std — importance: 0.03173
+   8. mean_speed_in_air_mean — importance: 0.02473
+   9. mean_speed_in_air_std — importance: 0.02389
+   10. gmrt_in_air_mean — importance: 0.02275
+   11. mean_speed_on_paper_cv — importance: 0.02184
+   12. gmrt_on_paper_mean — importance: 0.02172
+   13. gmrt_in_air_std — importance: 0.02131
+   14. air_time_cv — importance: 0.02126
+   15. pressure_mean_iqr — importance: 0.01839
+   16. num_of_pendown_cv — importance: 0.01791
+   17. max_y_extension_range — importance: 0.01720
+   18. disp_index_cv — importance: 0.01522
+   19. paper_time_std — importance: 0.01370
+   20. paper_time_iqr — importance: 0.01285
+   21. max_y_extension_std — importance: 0.01279
+   22. mean_acc_on_paper_iqr — importance: 0.01230
+   23. max_y_extension_mean — importance: 0.01187
+   24. max_y_extension_iqr — importance: 0.01162
+   25. mean_acc_in_air_std — importance: 0.01091
+
+4. XGBoost + Recursive Feature Elimination (Top 25)
+   1. air_time_mean
+   2. air_time_iqr
+   3. disp_index_mean
+   4. disp_index_std
+   5. disp_index_cv
+   6. disp_index_iqr
+   7. gmrt_in_air_std
+   8. gmrt_in_air_cv
+   9. gmrt_on_paper_cv
+   10. max_x_extension_cv
+   11. max_y_extension_std
+   12. max_y_extension_range
+   13. max_y_extension_iqr
+   14. mean_jerk_on_paper_std
+   15. mean_speed_in_air_std
+   16. mean_speed_in_air_cv
+   17. num_of_pendown_mean
+   18. num_of_pendown_cv
+   19. paper_time_mean
+   20. pressure_mean_mean
+   21. pressure_mean_std
+   22. pressure_var_std
+   23. pressure_var_cv
+   24. pressure_var_iqr
+   25. total_time_iqr
+
+5. Cross-Model Comparison
+   - Overlap count between RF and XGBoost-RFE: 14 / 25
+   - Overlap ratio: 0.56
+   - Common selected features:
+      • air_time_iqr
+      • air_time_mean
+      • disp_index_cv
+      • disp_index_mean
+      • gmrt_in_air_std
+      • max_y_extension_iqr
+      • max_y_extension_range
+      • max_y_extension_std
+      • mean_speed_in_air_std
+      • num_of_pendown_cv
+      • paper_time_mean
+      • pressure_mean_mean
+      • pressure_mean_std
+      • total_time_iqr
+
+6. Output Files
+   - Selected features CSV: D:/project-root/Cross-task validation\results/selected_features.csv
+   - Dropped features CSV: D:/project-root/Cross-task validation\results/metrics/dropped_features.csv
+   - Feature importances CSV (Random Forest): D:/project-root/Cross-task validation\results/metrics/feature_importance.csv
+   - XGBoost-RFE rankings CSV: D:/project-root/Cross-task validation\results/metrics/xgboost_rfe_comparison.csv
+   - Full dataset before filtering: D:/project-root/Cross-task validation\results/full_features_before_filter.csv
+   - Filtered dataset after correlation removal: D:/project-root/Cross-task validation\results/features_after_correlation_filter.csv
