@@ -3,26 +3,31 @@ import re
 import numpy as np
 import pandas as pd
 
+LABEL_COL = 'class'
+
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+
 Label_Col = 'class'
-DARWIN_DATASET = 'D:/project-root/Cross-task validation/data/raw/DARWIN_DATASET/data.csv'
-Results_dir = 'D:/project-root/Cross-task validation/results'
-Metrics_dir = 'D:/project-root/Cross-task validation/results/metrics'
-os.makedirs(Results_dir,exist_ok = True)
-os.makedirs(Metrics_dir,exist_ok = True)
+DARWIN_DATASET = os.path.join(BASE_DIR, 'data', 'raw', 'DARWIN_DATASET', 'data.csv')
+RESULTS_DIR = os.path.join(BASE_DIR, 'results')
+METRICS_DIR = os.path.join(RESULTS_DIR, 'metrics')
+
+os.makedirs(RESULTS_DIR, exist_ok=True)
+os.makedirs(METRICS_DIR, exist_ok=True)
 EPS = 1e-9
 
 def extract_base_features(columns):
     """From columns extract base features"""
     base_features = {}
     for col in columns:
-        if col == Label_Col:
+        if col == LABEL_COL:
             continue                    
         m = re.match(r"(.+?)(\d+)$", col)
         if not m:
             continue
         base = m.group(1)
         if base not in base_features:
-                base_features[base] = []
+            base_features[base] = []
         base_features[base].append(col)
     return base_features
             
@@ -30,29 +35,36 @@ def compute_stats(df, cols, prefix):
     """Compute variability stats for one base feature across all the tasks"""
     values                  = df[cols].apply(pd.to_numeric, errors='coerce').values
     stats                   = pd.DataFrame(index = df.index)
-    stats[f'{prefix}_mean'] = np.nanmean(values, axis= 1)
-    stats[f'{prefix}_std']  = np.nanstd(values, axis= 1)
+    stats[f'{prefix}_mean'] = np.nanmean(values, axis=1)
+    stats[f'{prefix}_std']  = np.nanstd(values, axis=1)
     stats[f'{prefix}_cv']   = stats[f'{prefix}_std'] / (stats[f'{prefix}_mean'] + EPS)
     stats[f'{prefix}_range']= np.nanmax(values, axis=1) - np.nanmin(values, axis=1)
     stats[f'{prefix}_iqr']  = np.nanpercentile(values, 75, axis=1) - np.nanpercentile(values, 25, axis=1)
     return stats
 
 def main():
-    print('Loading DARWIN dataset')
-    df=pd.read_csv('D:/project-root/Cross-task validation/data/raw/DARWIN_DATASET/data.csv')
+    print(f'Loading DARWIN dataset from {DARWIN_DATASET}')
+    df = pd.read_csv(DARWIN_DATASET)
     print('Extracting base features')
     base_features = extract_base_features(df.columns)
-    engineered   = pd.DataFrame(index=df.index)
     print('Computing engineered features')
+    engineered_list = []
     for base, cols in base_features.items():
         stats = compute_stats(df, cols, base)
-        engineered = pd.concat([engineered, stats], axis=1)
-    engineered[Label_Col] = df[Label_Col]
-    out_csv = os.path.join(Results_dir, 'engineered_features.csv')
+        engineered_list.append(stats)
+    
+    # Concatenate all engineered features at once for efficiency
+    if engineered_list:
+        engineered = pd.concat(engineered_list, axis=1)
+    else:
+        engineered = pd.DataFrame(index=df.index)
+        
+    engineered[LABEL_COL] = df[LABEL_COL]
+    out_csv = os.path.join(RESULTS_DIR, 'engineered_features.csv')
     engineered.to_csv(out_csv, index=False)
     print(f'Saving engineered features to {out_csv}')
 
-    report_file = os.path.join(Metrics_dir, 'feature_engineering.txt')
+    report_file = os.path.join(METRICS_DIR, 'feature_engineering.txt')
     with open(report_file, 'w') as f:
         f.write(f'Feature Engineering Report (DARWIN Dataset)\n')
         f.write(f'='*60 + '\n')
