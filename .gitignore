@@ -1,5 +1,6 @@
 # Root-level ignores for Cross-Task Variability Analysis
 
+
 # Project-specific logs
 BUG_REPORTS.yaml
 
