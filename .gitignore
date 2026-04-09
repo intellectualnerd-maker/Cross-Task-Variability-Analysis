@@ -60,3 +60,6 @@ Desktop.ini
 .tox/
 .nox/
 htmlcov/
+
+# Experimental Results
+Cross-task validation/results/
