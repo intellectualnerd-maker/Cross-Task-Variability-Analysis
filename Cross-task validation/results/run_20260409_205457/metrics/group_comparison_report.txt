@@ -1,0 +1,16 @@
+GROUP-LEVEL STATISTICAL COMPARISON: AD vs HEALTHY
+======================================================================
+
+Timestamp: 2026-04-09 20:55:15
+Dataset: DARWIN Handwriting Dataset
+Samples: AD = 89, Healthy = 85
+
+HYPOTHESIS
+--------------------------------------------------
+AD patients exhibit higher cross-task variability (CV, IQR, etc.)
+compared to healthy controls, reflecting cognitive instability.
+
+STATISTICAL METHOD
+--------------------------------------------------
+Test: Mann-Whitney U (one-tailed, AD > Healthy)
+Effect size: Rank-biserial correlation

@@ -1,0 +1,17 @@
+# Cross-Task Variability Analysis
+# Python 3.10+ recommended
+
+# Core scientific computing
+numpy>=1.21.0
+pandas>=1.4.0
+scipy>=1.7.0
+
+# Machine learning
+scikit-learn>=1.0.0
+xgboost>=1.5.0
+
+# Visualization
+matplotlib>=3.5.0
+
+# Optional but recommended
+jupyter>=1.0.0

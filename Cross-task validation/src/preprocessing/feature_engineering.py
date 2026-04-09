@@ -1,20 +1,15 @@
 import os
 import re
+import sys
 import numpy as np
 import pandas as pd
 
-LABEL_COL = 'class'
-
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-
-Label_Col = 'class'
-DARWIN_DATASET = os.path.join(BASE_DIR, 'data', 'raw', 'DARWIN_DATASET', 'data.csv')
-RESULTS_DIR = os.path.join(BASE_DIR, 'results')
-METRICS_DIR = os.path.join(RESULTS_DIR, 'metrics')
-
-os.makedirs(RESULTS_DIR, exist_ok=True)
-os.makedirs(METRICS_DIR, exist_ok=True)
-EPS = 1e-9
+# Add src to path for config import
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+from config import (
+    DARWIN_DATASET, ENGINEERED_FEATURES_CSV, RESULTS_DIR, METRICS_DIR,
+    LABEL_COL, EPS, ensure_directories
+)
 
 def extract_base_features(columns):
     """From columns extract base features"""
@@ -43,6 +38,7 @@ def compute_stats(df, cols, prefix):
     return stats
 
 def main():
+    ensure_directories()
     print(f'Loading DARWIN dataset from {DARWIN_DATASET}')
     df = pd.read_csv(DARWIN_DATASET)
     print('Extracting base features')
@@ -60,9 +56,8 @@ def main():
         engineered = pd.DataFrame(index=df.index)
         
     engineered[LABEL_COL] = df[LABEL_COL]
-    out_csv = os.path.join(RESULTS_DIR, 'engineered_features.csv')
-    engineered.to_csv(out_csv, index=False)
-    print(f'Saving engineered features to {out_csv}')
+    engineered.to_csv(ENGINEERED_FEATURES_CSV, index=False)
+    print(f'Saving engineered features to {ENGINEERED_FEATURES_CSV}')
 
     report_file = os.path.join(METRICS_DIR, 'feature_engineering.txt')
     with open(report_file, 'w') as f:
@@ -73,7 +68,7 @@ def main():
         f.write(f'base features:{len(base_features)}\n')
         f.write(f'engineered features per base: 5 (mean, std, cv, range, iqr)\n')
         f.write(f'Final feature count:{engineered.shape[1]-1}(excluding label)\n')
-        f.write(f'output file: {out_csv}\n')
+        f.write(f'output file: {ENGINEERED_FEATURES_CSV}\n')
         print(f'report saved to {report_file}')        
 
 if __name__ == "__main__":
